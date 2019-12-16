@@ -53,7 +53,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         """
         # Set profile_data to profile
         profile_data = validated_data.pop('profile')
-        tasks_data = validated_data.pop('tasks')
         # Set password to password
         password = validated_data.pop('password')
         # Set user to all fields in userModel
@@ -63,7 +62,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         user.save()
         # Create UserProfile according to User
         UserProfile.objects.create(user=user, **profile_data)
-        Task.objects.create(owner=user, **tasks_data)
 
         return user
 
@@ -73,10 +71,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         """
         # Get profile_data
         profile_data = validated_data.pop('profile')
-        tasks_data = validated_data.pop('tasks')
         # Get UserProfile instance
         profile = instance.profile
-        tasks = instance.tasks
 
         # Update User fields
         # Previous data = (New validated data)
@@ -88,11 +84,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         # Previous data = (New validated data)
         profile.profile_picture = profile_data.get('profile_picture', profile.profile_picture)
         profile.profile_banner = profile_data.get('profile_banner', profile.profile_banner)
-        # Tasks update
-        tasks.title = tasks_data.get('title', tasks.title)
-        tasks.description = tasks_data.get('description', tasks.description)
-        tasks.completed = tasks_data.get('completed', tasks.completed)
-        tasks.task_picture =  tasks_data.get('task_picture', tasks.task_picture)
         
         # Save updated UserProfile
         profile.save()

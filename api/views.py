@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 
 from api.models import User, Task
 from api.serializers import UserSerializer, TaskSerializer
-from api.permissions import IsLoggedInUserOrAdmin, IsAdminUser
+from api.permissions import IsLoggedInUserOrAdmin, IsAdminUser, IsOwnerOrAdmin
 
 
 
@@ -50,12 +50,9 @@ class TaskViewSet(viewsets.ModelViewSet):
         """
         permission_classes = []
 
-        # Everyone can create a Profile, see a profile or see all profiles.
-        if self.action == 'retrieve' or self.action == 'list':
-            permission_classes = [AllowAny]
-        # If you are logged in you can edit your profile, or if you are admin.
-        elif self.action == 'create' or self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
-            permission_classes = [IsLoggedInUserOrAdmin]
+        # If you are logged in you can edit your profile, or if you are admin. If safe method you can bypass.
+        if self.action == 'retrieve' or self.action == 'list' or self.action == 'create' or self.action == 'update' or self.action == 'partial_update' or self.action == 'destroy':
+            permission_classes = [IsOwnerOrAdmin]
 
         # Return permissions
         return [permission() for permission in permission_classes]

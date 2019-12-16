@@ -61,7 +61,7 @@ class Task(models.Model):
     title = models.CharField(_("Task title"), max_length=100)
     description = models.TextField(_("Task description"), max_length=500)
     completed = models.BooleanField(_("Task status"), default=False)
-    task_picture = models.ImageField(_("Task picture"), upload_to=task_directory_path, height_field=None, width_field=None, max_length=None)
+    task_picture = models.ImageField(_("Task picture"), upload_to=task_directory_path, height_field=None, width_field=None, max_length=None, blank=True)
 
     # Model Options
     # class Meta:
